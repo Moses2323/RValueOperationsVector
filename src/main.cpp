@@ -16,7 +16,7 @@ int main() {
 		vec1[i] = i;
 		vec2[i] = i*10;
 	}
-	/*
+	/* TEST FOR FUNCTIONS
 	cout << "vec1 = " << vec1 << endl;
 	cout << "vec2 = " << vec2 << endl << endl;
 
@@ -65,8 +65,8 @@ int main() {
 	vec4.clean();
 	cout << endl;
 
-	vec4 = std::move(vec1 + std::move(vec2 + vec3));
-	cout << "std::move(vec1 + std::move(vec2 + vec3)) : " << vec4 << endl;
+	vec4 = std::move(std::move(vec1 + vec2) + vec3);
+	cout << "std::move(std::move(vec1 + vec2) + vec3) : " << vec4 << endl;
 
 	return 0;
 }
