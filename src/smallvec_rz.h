@@ -170,9 +170,9 @@ inline std::ostream& operator<<(std::ostream& s, const SmallVector<T>& vec){
 	s << '[';
 	if (vec.size() > 0){
 		for(size_t i=0; i < vec.size()-1; ++i){
-			s << ' ' << static_cast<int>(vec[i]) << ',';
+			s << ' ' << vec[i] << ',';
 		}
-		s << ' ' << static_cast<int>(vec[vec.size()-1]);
+		s << ' ' << vec[vec.size()-1];
 	}
 	s << ']';
 	return s;
