@@ -44,6 +44,18 @@ void test_usual_functions(){
 
 	vec4.clean();
 
+	SmallVector<short> vec5(N);
+	for(size_t i=0; i < N; ++i){
+		vec5[i] = i + 2;
+	}
+	cout << "vec5 = " << vec5 << endl;
+	vec5.resize(N+3);
+	cout << "vec5 with resize N+3 = " << vec5 << endl;
+	vec5.resize(N/2);
+	cout << "vec5 with resize N/2 = " << vec5 << endl;
+	vec5.resize(0);
+	cout << "vec5 with resize(0) = " << vec5 << endl;
+
 	cout << "END OF USUAL FUNCTIONS TEST" << endl;
 }
 
@@ -85,17 +97,51 @@ void test_plus(){
 	cout << "END OF PLUS TEST" << endl;
 }
 
+void test_unary_minus(){
+	cout << "START UNARY MINUS TEST" << endl;
+
+	size_t N = 7;
+	SmallVector<int> vec1(N);
+	for(size_t i=0; i < vec1.size(); ++i)
+		vec1[i] = i*2 + 1;
+
+	cout << "vec1 = " << vec1 << endl;
+	cout << "-vec1 = " << -vec1 << endl << endl;
+
+	SmallVector<int> vec2;
+	cout << "vec2 = " << vec2 << endl;
+	vec2 = -vec1;
+	cout << "vec1 = " << vec1 << endl;
+	cout << "after vec2 = -vec1 : " << vec2 << endl << endl;
+
+	for(size_t i=0; i < vec2.size(); ++i)
+		vec2[i] = i;
+
+	cout << "vec1 = " << vec1 << endl;
+	cout << "vec2 = " << vec2 << endl;
+	vec2 = -std::move(vec1);
+	cout << "after vec2 = -std::move(vec1):" << endl;
+	cout << "vec1 = " << vec1 << endl;
+	cout << "vec2 = " << vec2 << endl;
+
+	cout << "END OF UNARY MINUS TEST" << endl;
+}
+
+void test_multiply(){
+	cout << "START MULTIPLY TEST" << endl;
+
+
+
+	cout << "END OF MULTIPLY TEST" << endl;
+}
+
 int main() {
 	test_usual_functions();
 	cout << "--------------------------------------------------" << endl;
 	test_plus();
-
-	auto func = [](double a1, double a2) -> double{
-		return a1 + a2;
-	};
-
-	double f3 = func(3,4);
-	cout << f3 << endl;
-
+	cout << "--------------------------------------------------" << endl;
+	test_unary_minus();
+	cout << "--------------------------------------------------" << endl;
+	test_multiply();
 	return 0;
 }
