@@ -1,7 +1,6 @@
 // THIS FILE MUST NOT BE INCLUDED IN PROJECTS!
 // FILE CONTAINS ONLY REALISATION OF METHODS IN CLASS SmallVector<T>
 
-#include <iostream>
 #include <cstring>
 
 template<typename T>
@@ -123,7 +122,8 @@ inline void SmallVector<T>::resize(size_t newN){
 }
 
 template<typename T>
-inline SmallVector<T>& SmallVector<T>::operator+=(const SmallVector<T>& rhs){
+template<typename U>
+inline SmallVector<T>& SmallVector<T>::operator+=(const SmallVector<U>& rhs){
 	#if SMALLVECTOR_DEBUG
 	std::cout << "\toperator+= usual" << std::endl;
 	#endif
@@ -140,7 +140,8 @@ inline SmallVector<T>& SmallVector<T>::operator+=(const SmallVector<T>& rhs){
 }
 
 template<typename T>
-inline SmallVector<T>& SmallVector<T>::operator-=(const SmallVector<T>& rhs){
+template<typename U>
+inline SmallVector<T>& SmallVector<T>::operator-=(const SmallVector<U>& rhs){
 	#if SMALLVECTOR_DEBUG
 	std::cout << "\toperator-= usual" << std::endl;
 	#endif
@@ -181,6 +182,34 @@ SmallVector<T>& SmallVector<T>::operator*=(const SmallVector<U>& rhs){
 
 	for(size_t i=0; i < N_; ++i)
 		data_[i] *= rhs.data_[i];
+	return *this;
+}
+
+template<typename T>
+template<typename U>
+inline SmallVector<T>& SmallVector<T>::operator/=(const U& scalar){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator/= for scalar" << std::endl;
+	#endif
+
+	for(size_t i=0; i < N_; ++i)
+		data_[i] /= scalar;
+	return *this;
+}
+
+template<typename T>
+template<typename U>
+SmallVector<T>& SmallVector<T>::operator/=(const SmallVector<U>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator/= usual (for vector)" << std::endl;
+	#endif
+
+	if (N_ != rhs.N_){
+		throw IncompatibleSizesError();
+	}
+
+	for(size_t i=0; i < N_; ++i)
+		data_[i] /= rhs.data_[i];
 	return *this;
 }
 
@@ -285,6 +314,43 @@ inline SmallVector<T> operator+(SmallVector<T>&& lhs, SmallVector<T>&& rhs){
 	#endif
 
 	return std::move( lhs += rhs );
+}
+
+template<typename T>
+inline SmallVector<T> operator*(const SmallVector<T>& lhs, const SmallVector<T>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator* usual" << std::endl;
+	#endif
+
+	SmallVector<T> tmp(lhs);
+	return std::move( tmp *= rhs );
+}
+
+template<typename T>
+inline SmallVector<T> operator*(const SmallVector<T>& lhs, SmallVector<T>&& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator*&& in right hand side" << std::endl;
+	#endif
+
+	return std::move( rhs *= lhs );
+}
+
+template<typename T>
+inline SmallVector<T> operator*(SmallVector<T>&& lhs, const SmallVector<T>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator*&& in left hand side" << std::endl;
+	#endif
+
+	return std::move( lhs *= rhs );
+}
+
+template<typename T>
+inline SmallVector<T> operator*(SmallVector<T>&& lhs, SmallVector<T>&& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator*&& in left and right hand side" << std::endl;
+	#endif
+
+	return std::move( lhs *= rhs );
 }
 
 template<typename T>

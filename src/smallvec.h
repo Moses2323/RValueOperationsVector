@@ -3,6 +3,8 @@
 
 #define SMALLVECTOR_DEBUG 1
 
+#include <iostream>
+
 /*! \~russian
  * \brief Класс реализует вектор с арифметическими операциями.
  *
@@ -37,6 +39,11 @@
  *  cout << "vec1 + vec2 + vec3 : " << vec4 << endl;
  * \endcode
  *
+ * \warning Если с вашим типом, который будет содержаться в SmallVector,
+ * перестановка слагаемых при умножении
+ * или суммировании может дать различный результат,
+ * то не используйте данный класс!
+ *
  */
 template<typename T>
 class SmallVector{
@@ -69,12 +76,18 @@ public:
 	ValType* data() noexcept { return data_; }
 	const ValType* data() const noexcept { return data_; }
 
-	SmallVector& operator+=(const SmallVector& rhs);
-	SmallVector& operator-=(const SmallVector& rhs);
+	template<typename U>
+	SmallVector<T>& operator+=(const SmallVector<U>& rhs);
+	template<typename U>
+	SmallVector<T>& operator-=(const SmallVector<U>& rhs);
 	template<typename U>
 	SmallVector<T>& operator*=(const U& scalar);
 	template<typename U>
 	SmallVector<T>& operator*=(const SmallVector<U>& rhs);
+	template<typename U>
+	SmallVector<T>& operator/=(const U& scalar);
+	template<typename U>
+	SmallVector<T>& operator/=(const SmallVector<U>& rhs);
 };
 
 template<typename T>
@@ -106,6 +119,18 @@ SmallVector<T> operator-(const SmallVector<T>& vec);
 
 template<typename T>
 SmallVector<T> operator-(SmallVector<T>&& vec);
+
+template<typename T>
+SmallVector<T> operator*(const SmallVector<T>& lhs, const SmallVector<T>& rhs);
+
+template<typename T>
+SmallVector<T> operator*(const SmallVector<T>& lhs, SmallVector<T>&& rhs);
+
+template<typename T>
+SmallVector<T> operator*(SmallVector<T>&& lhs, const SmallVector<T>& rhs);
+
+template<typename T>
+SmallVector<T> operator*(SmallVector<T>&& lhs, SmallVector<T>&& rhs);
 
 template<typename T>
 std::ostream& operator<<(std::ostream& s, const SmallVector<T>& vec);

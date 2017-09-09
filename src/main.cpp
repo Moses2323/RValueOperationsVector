@@ -1,7 +1,9 @@
+#include "smallvec.h"
+
 #include <iostream>
 #include <string>
-
-#include "smallvec.h"
+#include <vector>
+#include <valarray>
 
 using std::cout;
 using std::cerr;
@@ -130,7 +132,34 @@ void test_unary_minus(){
 void test_multiply(){
 	cout << "START MULTIPLY TEST" << endl;
 
+	size_t N = 7;
+	SmallVector<double> vec1(N);
+	for(size_t i=0; i < N; ++i)
+		vec1[i] = i + 1;
 
+	SmallVector<double> vec2(N);
+	for(size_t i=0; i < N ; ++i)
+		vec2[i] = 10 - i;
+
+	double aud = 0.1;
+	int aui = 5;
+
+	cout << "vec1 = " << vec1 << endl;
+	cout << "vec2 = " << vec2 << endl;
+	cout << "aud = " << aud << endl;
+	cout << "aui = " << aui << endl << endl;
+
+	cout << "(vec1 *= aud) : " << (vec1 *= aud) << endl;
+	cout << "vec1 = " << vec1 << endl;
+	cout << "aud = " << aud << endl << endl;
+
+	cout << "(vec1 *= aui) : " << (vec1 *= aui) << endl;
+	cout << "vec1 = " << vec1 << endl;
+	cout << "aui = " << aui << endl << endl;
+
+	cout << "(vec1 *= vec2) : " << (vec1 *= vec2) << endl;
+	cout << "vec1 = " << vec1 << endl;
+	cout << "vec2 = " << vec2 << endl;
 
 	cout << "END OF MULTIPLY TEST" << endl;
 }
