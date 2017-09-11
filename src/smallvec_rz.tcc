@@ -2,6 +2,13 @@
 // FILE CONTAINS ONLY REALISATION OF METHODS IN CLASS SmallVector<T>
 
 #include <cstring>
+#include <type_traits>
+
+template<typename T>
+void SmallVector<T>::fieldWithZeroIfTrivial(int shift){
+	if (std::is_trivial<T>())
+		std::memset(data_ + shift, 0, (N_ - shift)*sizeof(T));
+}
 
 template<typename T>
 inline void SmallVector<T>::clean(){
@@ -23,8 +30,8 @@ inline SmallVector<T>::SmallVector(size_t N) : N_(N){
 	std::cout << "\tusual constructor" << std::endl;
 	#endif
 	data_ = new ValType[N_];
-	for(size_t i=0; i < N_; ++i)
-		data_[i] = 0;
+
+	fieldWithZeroIfTrivial();
 }
 
 template<typename T>
@@ -92,8 +99,7 @@ inline void SmallVector<T>::resize(size_t newN){
 		if (newN){
 			N_ = newN;
 			data_ = new ValType[N_];
-			for(size_t i=0; i < N_; ++i)
-				data_[i] = 0;
+			fieldWithZeroIfTrivial();
 		}
 	}
 	else{
@@ -113,6 +119,7 @@ inline void SmallVector<T>::resize(size_t newN){
 				data_[i] = tmp.data_[i];
 			for(size_t i=tmp.N_; i < N_; ++i)
 				data_[i] = 0;
+			fieldWithZeroIfTrivial(tmp.N_);
 		}
 		else{
 			for(size_t i=0; i < N_; ++i)
@@ -213,7 +220,7 @@ SmallVector<T>& SmallVector<T>::operator/=(const SmallVector<U>& rhs){
 	return *this;
 }
 
-// -------------------------------------------------
+// + - * / -------------------------------------------------
 
 template<typename T>
 inline SmallVector<T> operator-(const SmallVector<T>& vec){
@@ -352,6 +359,98 @@ inline SmallVector<T> operator*(SmallVector<T>&& lhs, SmallVector<T>&& rhs){
 
 	return std::move( lhs *= rhs );
 }
+
+// == < > <= >= -------------------------------------------------
+
+/*!
+ * \brief Operator ==
+ * \details Do operator== with all elements of vector.
+ * \todo do this function with rvalue-reference and allocator later
+ * \param lhs left hand side
+ * \param rhs right hand side
+ * \return boolean vector
+ */
+template<typename T, typename U>
+SmallVector<bool> operator==(const SmallVector<T>& lhs, const SmallVector<U>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator== usual" << std::endl;
+	#endif
+
+	if (lhs.size() != rhs.size())
+		throw typename SmallVector<T>::IncompatibleSizesError();
+
+	SmallVector<bool> res(lhs.size());
+	for(size_t i=0; i < lhs.size(); ++i)
+		res[i] = (lhs[i] == rhs[i]);
+
+	return std::move( res );
+}
+
+template<typename T, typename U>
+SmallVector<bool> operator<(const SmallVector<T>& lhs, const SmallVector<U>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator< usual" << std::endl;
+	#endif
+
+	if (lhs.size() != rhs.size())
+		throw typename SmallVector<T>::IncompatibleSizesError();
+
+	SmallVector<bool> res(lhs.size());
+	for(size_t i=0; i < lhs.size(); ++i)
+		res[i] = (lhs[i] < rhs[i]);
+
+	return std::move( res );
+}
+
+template<typename T, typename U>
+SmallVector<bool> operator>(const SmallVector<T>& lhs, const SmallVector<U>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator> usual" << std::endl;
+	#endif
+
+	if (lhs.size() != rhs.size())
+		throw typename SmallVector<T>::IncompatibleSizesError();
+
+	SmallVector<bool> res(lhs.size());
+	for(size_t i=0; i < lhs.size(); ++i)
+		res[i] = (lhs[i] > rhs[i]);
+
+	return std::move( res );
+}
+
+template<typename T, typename U>
+SmallVector<bool> operator<=(const SmallVector<T>& lhs, const SmallVector<U>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator<= usual" << std::endl;
+	#endif
+
+	if (lhs.size() != rhs.size())
+		throw typename SmallVector<T>::IncompatibleSizesError();
+
+	SmallVector<bool> res(lhs.size());
+	for(size_t i=0; i < lhs.size(); ++i)
+		res[i] = (lhs[i] <= rhs[i]);
+
+	return std::move( res );
+}
+
+template<typename T, typename U>
+SmallVector<bool> operator>=(const SmallVector<T>& lhs, const SmallVector<U>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator< usual" << std::endl;
+	#endif
+
+	if (lhs.size() != rhs.size())
+		throw typename SmallVector<T>::IncompatibleSizesError();
+
+	SmallVector<bool> res(lhs.size());
+	for(size_t i=0; i < lhs.size(); ++i)
+		res[i] = (lhs[i] >= rhs[i]);
+
+	return std::move( res );
+}
+
+// << -------------------------------------------------
 
 template<typename T>
 inline std::ostream& operator<<(std::ostream& s, const SmallVector<T>& vec){

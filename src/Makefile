@@ -6,7 +6,7 @@ CXXFLAGSDBG=-std=c++14 -O0 -g -Wall -pedantic
 LIBS=
 SRCS=$(wildcard *.cpp)
 TRG=..\build\bin\RValueOperationsVector.exe
-DPNDS=$(wildcard *.h *.hpp *.hxx)
+DPNDS=$(wildcard *.h *.hpp *.hxx *.tcc)
 
 all: $(TRG) 
 

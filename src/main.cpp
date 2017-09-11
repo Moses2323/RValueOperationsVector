@@ -164,6 +164,27 @@ void test_multiply(){
 	cout << "END OF MULTIPLY TEST" << endl;
 }
 
+void test_equal(){
+	cout << "START EQUAL TEST" << endl;
+
+	size_t N = 7;
+	SmallVector<int> veci(N);
+	SmallVector<double> vecd(N);
+
+	for(size_t i=0; i < N; ++i){
+		veci[i] = i;
+		vecd[i] = i / 10.0;
+	}
+
+	cout << "veci = " << veci << endl;
+	cout << "vecd = " << vecd << endl << endl;
+	cout << "veci == vecd : " << (veci == vecd) << endl;
+	cout << "veci = " << veci << endl;
+	cout << "vecd = " << vecd << endl << endl;
+
+	cout << "END OF EQUAL TEST" << endl;
+}
+
 int main() {
 	test_usual_functions();
 	cout << "--------------------------------------------------" << endl;
@@ -172,5 +193,8 @@ int main() {
 	test_unary_minus();
 	cout << "--------------------------------------------------" << endl;
 	test_multiply();
+	cout << "--------------------------------------------------" << endl;
+	test_equal();
+
 	return 0;
 }

@@ -6,12 +6,12 @@
 #include <iostream>
 
 /*! \~russian
- * \brief Класс реализует вектор с арифметическими операциями.
+ * \brief РљР»Р°СЃСЃ СЂРµР°Р»РёР·СѓРµС‚ РІРµРєС‚РѕСЂ СЃ Р°СЂРёС„РјРµС‚РёС‡РµСЃРєРёРјРё РѕРїРµСЂР°С†РёСЏРјРё.
  *
- * Класс является экспериментом с rvalue-ссылками и их использованием
- * в операторах.
+ * РљР»Р°СЃСЃ СЏРІР»СЏРµС‚СЃСЏ СЌРєСЃРїРµСЂРёРјРµРЅС‚РѕРј СЃ rvalue-СЃСЃС‹Р»РєР°РјРё Рё РёС… РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј
+ * РІ РѕРїРµСЂР°С‚РѕСЂР°С….
  *
- * Схема использования:
+ * РЎС…РµРјР° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ:
  * \code
  *  using std::cout;
  *  using std::endl;
@@ -39,10 +39,10 @@
  *  cout << "vec1 + vec2 + vec3 : " << vec4 << endl;
  * \endcode
  *
- * \warning Если с вашим типом, который будет содержаться в SmallVector,
- * перестановка слагаемых при умножении
- * или суммировании может дать различный результат,
- * то не используйте данный класс!
+ * \warning Р•СЃР»Рё СЃ РІР°С€РёРј С‚РёРїРѕРј, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ СЃРѕРґРµСЂР¶Р°С‚СЊСЃСЏ РІ SmallVector,
+ * РїРµСЂРµСЃС‚Р°РЅРѕРІРєР° СЃР»Р°РіР°РµРјС‹С… РїСЂРё СѓРјРЅРѕР¶РµРЅРёРё
+ * РёР»Рё СЃСѓРјРјРёСЂРѕРІР°РЅРёРё РјРѕР¶РµС‚ РґР°С‚СЊ СЂР°Р·Р»РёС‡РЅС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚,
+ * С‚Рѕ РЅРµ РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РґР°РЅРЅС‹Р№ РєР»Р°СЃСЃ!
  *
  */
 template<typename T>
@@ -52,6 +52,8 @@ public:
 private:
 	size_t N_ {0};
 	ValType* data_ {nullptr};
+
+	void fieldWithZeroIfTrivial(int shift = 0);
 
 public:
 	class IncompatibleSizesError{};
@@ -89,6 +91,8 @@ public:
 	template<typename U>
 	SmallVector<T>& operator/=(const SmallVector<U>& rhs);
 };
+
+// + - * /
 
 template<typename T>
 SmallVector<T> operator+(const SmallVector<T>& lhs, const SmallVector<T>& rhs);
@@ -132,9 +136,28 @@ SmallVector<T> operator*(SmallVector<T>&& lhs, const SmallVector<T>& rhs);
 template<typename T>
 SmallVector<T> operator*(SmallVector<T>&& lhs, SmallVector<T>&& rhs);
 
+// boolean operations (do it with allocator later)
+
+template<typename T, typename U>
+SmallVector<bool> operator==(const SmallVector<T>& lhs, const SmallVector<U>& rhs);
+
+template<typename T, typename U>
+SmallVector<bool> operator<(const SmallVector<T>& lhs, const SmallVector<U>& rhs);
+
+template<typename T, typename U>
+SmallVector<bool> operator>(const SmallVector<T>& lhs, const SmallVector<U>& rhs);
+
+template<typename T, typename U>
+SmallVector<bool> operator<=(const SmallVector<T>& lhs, const SmallVector<U>& rhs);
+
+template<typename T, typename U>
+SmallVector<bool> operator>=(const SmallVector<T>& lhs, const SmallVector<U>& rhs);
+
+// <<
+
 template<typename T>
 std::ostream& operator<<(std::ostream& s, const SmallVector<T>& vec);
 
-#include "smallvec_rz.h"
+#include "smallvec_rz.tcc"
 
 #endif // SMALL_VECTOR_07092017_GASPARYANMOSES
