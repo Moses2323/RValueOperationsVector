@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <valarray>
+#include <ctime>
+#include <iomanip>
 
 using std::cout;
 using std::cerr;
@@ -185,6 +187,86 @@ void test_equal(){
 	cout << "END OF EQUAL TEST" << endl;
 }
 
+void test_time(){
+	std::cout << "START TIME TEST" << std::endl;
+	cout << std::setprecision(10);
+
+	size_t N = 10000000;
+
+	std::valarray<double> val1(N), val2(N), val3(N);
+	SmallVector<double> vec1(N), vec2(N), vec3(N);
+
+	long long int t1, t2;
+	double time1, time2;
+
+	for(size_t i=0; i < N; ++i){
+		val1[i] = i;
+		val2[i] = i*0.5;
+		val3[i] = i / 2.0;
+
+		vec1[i] = val1[i];
+		vec2[i] = val2[i];
+		vec3[i] = val3[i];
+	}
+
+	t1 = clock();
+	val1 += val2;
+	val1 *= val3;
+	val1 += val2;
+	val1 /= val2;
+	val1 += val3;
+	t2 = clock();
+	time1 = static_cast<double>(t2 - t1)/CLOCKS_PER_SEC;
+	std::cout << "time val1 += val2 : " << time1 << " sec" << std::endl;
+
+	t1 = clock();
+	vec1 += vec2;
+	vec1 *= vec3;
+	vec1 += vec2;
+	vec1 /= vec2;
+	vec1 += vec3;
+	t2 = clock();
+	time2 = static_cast<double>(t2 - t1)/CLOCKS_PER_SEC;
+	std::cout << "time vec1 += vec2 : " << time2 << " sec" << std::endl;
+	std::cout << "diffTime (time of vec - time of val) : " << time2 - time1 << " sec" << endl << endl;
+
+	// -----------------------------------
+
+	SmallVector<double> vvec1(N), vvec2(N), vvec3(N), vvec4(N);
+	std::valarray<double> vval1(N), vval2(N), vval3(N), vval4(N);
+
+	for(size_t i=0; i < N; ++i){
+		vval1[i] = i;
+		vval2[i] = i*0.5;
+		vval3[i] = i / 2.0;
+		vval4[i] = i * 2.4;
+
+		vvec1[i] = vval1[i];
+		vvec2[i] = vval2[i];
+		vvec3[i] = vval3[i];
+		vvec4[i] = vval4[i];
+	}
+
+	t1 = clock();
+	vval1 = vval2 + vval3 + vval4;
+	t2 = clock();
+	time1 = static_cast<double>(t2 - t1)/CLOCKS_PER_SEC;
+	std::cout << "time vval1 = vval2 + vval3 + vval4 : " << time1 << " sec" << std::endl;
+
+
+	t1 = clock();
+	vvec1 = vvec2 + vvec3 + vvec4;
+	t2 = clock();
+	time2 = static_cast<double>(t2 - t1)/CLOCKS_PER_SEC;
+	std::cout << "time vvec1 = vvec2 + vvec3 + vvec4 : " << time2 << " sec" << std::endl;
+	std::cout << "diffTime (time of vec - time of val) : " << time2 - time1 << " sec" << endl << endl;
+
+	cout << endl << "END OF TIME TEST" << endl;
+
+	// += with -O0 : valarray faster or equal
+	// += with -O3 : valarray slower or equal
+}
+
 int main() {
 	test_usual_functions();
 	cout << "--------------------------------------------------" << endl;
@@ -195,6 +277,8 @@ int main() {
 	test_multiply();
 	cout << "--------------------------------------------------" << endl;
 	test_equal();
+	cout << "--------------------------------------------------" << endl;
+	test_time();
 
 	return 0;
 }

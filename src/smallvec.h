@@ -153,6 +153,9 @@ SmallVector<bool> operator<=(const SmallVector<T>& lhs, const SmallVector<U>& rh
 template<typename T, typename U>
 SmallVector<bool> operator>=(const SmallVector<T>& lhs, const SmallVector<U>& rhs);
 
+template<typename T, typename U>
+SmallVector<bool> operator!=(const SmallVector<T>& lhs, const SmallVector<U>& rhs);
+
 // <<
 
 template<typename T>

@@ -437,7 +437,7 @@ SmallVector<bool> operator<=(const SmallVector<T>& lhs, const SmallVector<U>& rh
 template<typename T, typename U>
 SmallVector<bool> operator>=(const SmallVector<T>& lhs, const SmallVector<U>& rhs){
 	#if SMALLVECTOR_DEBUG
-	std::cout << "\toperator< usual" << std::endl;
+	std::cout << "\toperator>= usual" << std::endl;
 	#endif
 
 	if (lhs.size() != rhs.size())
@@ -446,6 +446,22 @@ SmallVector<bool> operator>=(const SmallVector<T>& lhs, const SmallVector<U>& rh
 	SmallVector<bool> res(lhs.size());
 	for(size_t i=0; i < lhs.size(); ++i)
 		res[i] = (lhs[i] >= rhs[i]);
+
+	return std::move( res );
+}
+
+template<typename T, typename U>
+SmallVector<bool> operator!=(const SmallVector<T>& lhs, const SmallVector<U>& rhs){
+	#if SMALLVECTOR_DEBUG
+	std::cout << "\toperator!= usual" << std::endl;
+	#endif
+
+	if (lhs.size() != rhs.size())
+		throw typename SmallVector<T>::IncompatibleSizesError();
+
+	SmallVector<bool> res(lhs.size());
+	for(size_t i=0; i < lhs.size(); ++i)
+		res[i] = (lhs[i] != rhs[i]);
 
 	return std::move( res );
 }
